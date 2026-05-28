@@ -37,6 +37,7 @@ function App() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeStory, setActiveStory] = useState<StoryKey>('hero')
   const [isLoaded, setIsLoaded] = useState(false)
+  const [enableMotion, setEnableMotion] = useState(false)
   const [contactStatus, setContactStatus] = useState<
     | { type: 'idle' }
     | { type: 'submitting' }
@@ -61,7 +62,11 @@ function App() {
   } as CSSProperties
 
   useEffect(() => {
-    const root = document.documentElement
+    const motionQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const syncMotion = () => setEnableMotion(motionQuery.matches)
+    syncMotion()
+    motionQuery.addEventListener('change', syncMotion)
+
     const revealItems = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
     const storyItems = Array.from(document.querySelectorAll<HTMLElement>('[data-story-section]'))
 
@@ -113,9 +118,6 @@ function App() {
       const depth = Math.round(progress * 220)
       setScrollDepth(depth)
       setScrollProgress(progress)
-      root.style.setProperty('--scroll-progress', progress.toFixed(4))
-      root.style.setProperty('--scroll-y', `${window.scrollY}px`)
-      root.style.setProperty('--scroll-pulse', `${Math.round(progress * 100)}%`)
     }
 
     const onScroll = () => {
@@ -130,27 +132,19 @@ function App() {
     window.addEventListener('load', () => setIsLoaded(true), { once: true })
     const bootTimer = window.setTimeout(() => setIsLoaded(true), 1200)
 
-    const onPointerMove = (event: PointerEvent) => {
-      root.style.setProperty('--cursor-x', `${event.clientX}px`)
-      root.style.setProperty('--cursor-y', `${event.clientY}px`)
-      root.style.setProperty('--spot-x', `${event.clientX}px`)
-      root.style.setProperty('--spot-y', `${event.clientY}px`)
-    }
-
-    window.addEventListener('pointermove', onPointerMove, { passive: true })
-
     return () => {
+      motionQuery.removeEventListener('change', syncMotion)
       observer.disconnect()
       storyObserver.disconnect()
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
-      window.removeEventListener('pointermove', onPointerMove)
       window.clearTimeout(bootTimer)
       if (frame) window.cancelAnimationFrame(frame)
     }
   }, [])
 
   const handleMagneticMove = (event: ReactPointerEvent<HTMLElement>) => {
+    if (!enableMotion) return
     const element = event.currentTarget
     const rect = element.getBoundingClientRect()
     const x = (event.clientX - rect.left) / rect.width
@@ -166,6 +160,7 @@ function App() {
   }
 
   const handleMagneticLeave = (event: ReactPointerEvent<HTMLElement>) => {
+    if (!enableMotion) return
     const element = event.currentTarget
     element.style.setProperty('--mag-x', '50%')
     element.style.setProperty('--mag-y', '50%')
@@ -193,10 +188,6 @@ function App() {
         <p className="mt-5 text-xs uppercase tracking-[0.32em] text-slate-400">
           Crafting the signature experience
         </p>
-      </div>
-      <div className="cursor-spotlight" aria-hidden="true" />
-      <div className={`custom-cursor ${isLoaded ? 'custom-cursor-ready' : ''}`} aria-hidden="true">
-        <div className="custom-cursor-core" />
       </div>
       <header className="sticky top-0 z-30 border-b border-white/8 bg-slate-950/78 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -247,6 +238,7 @@ function App() {
           style={heroStyle}
           data-story-section="hero"
           onPointerMove={(event) => {
+            if (!enableMotion) return
             const rect = event.currentTarget.getBoundingClientRect()
             const x = (event.clientX - rect.left) / rect.width - 0.5
             const y = (event.clientY - rect.top) / rect.height - 0.5
@@ -255,7 +247,10 @@ function App() {
               y: Math.max(-6, Math.min(6, -y * 12)),
             })
           }}
-          onPointerLeave={() => setHeroTilt({ x: 0, y: 0 })}
+          onPointerLeave={() => {
+            if (!enableMotion) return
+            setHeroTilt({ x: 0, y: 0 })
+          }}
         >
           <div className="hero-backdrop" />
           <div className="absolute left-[-7rem] top-16 -z-10 h-72 w-72 rounded-full bg-amber-400/12 blur-3xl hero-orb hero-orb-a" />

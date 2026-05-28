@@ -9,8 +9,8 @@ dist
 
 # logs
 *.log
+*.zip
 
 # editors
 .vscode
 .idea
-
