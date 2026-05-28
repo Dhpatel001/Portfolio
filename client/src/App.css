@@ -306,7 +306,7 @@ html {
 }
 
 .hero-grid {
-  perspective: 1800px;
+  perspective: none;
 }
 
 .hero-grid::before {
@@ -318,61 +318,28 @@ html {
     radial-gradient(circle at 15% 10%, rgba(251, 191, 36, 0.13), transparent 22%),
     radial-gradient(circle at 80% 14%, rgba(34, 211, 238, 0.14), transparent 24%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 25%);
-  transform: translate3d(0, calc(var(--scroll-depth) * 0.18), 0);
 }
 
 .hero-title {
-  transform: translate3d(0, var(--hero-title-shift, 0px), 0) scale(var(--hero-scale, 1));
+  transform: none;
   transform-origin: left center;
-  transition: transform 80ms linear;
+  transition: none;
 }
 
 .hero-copy {
-  transform: translate3d(0, var(--hero-copy-shift, 0px), 0);
-  transition: transform 80ms linear;
+  transform: none;
+  transition: none;
 }
 
 .hero-stats {
-  transform: translate3d(0, var(--hero-shift, 0px), 0);
-  transition: transform 80ms linear;
+  transform: none;
+  transition: none;
 }
 
 .hero-copy,
 .hero-title,
 .hero-stats {
-  will-change: transform;
-}
-
-.magnetic {
-  --mag-x: 50%;
-  --mag-y: 50%;
-  --mag-rotate-x: 0deg;
-  --mag-rotate-y: 0deg;
-  --mag-lift: 0;
-  transform-style: preserve-3d;
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    border-color 180ms ease,
-    filter 180ms ease;
-}
-
-.magnetic::before {
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 35%),
-    linear-gradient(315deg, rgba(255, 255, 255, 0.03), transparent 28%),
-    radial-gradient(circle at var(--mag-x) var(--mag-y), rgba(255, 255, 255, 0.12), transparent 34%);
-}
-
-.magnetic::after {
-  background:
-    radial-gradient(circle at var(--mag-x) var(--mag-y), rgba(251, 191, 36, 0.18), transparent 62%),
-    radial-gradient(circle at 60% 70%, rgba(34, 211, 238, 0.14), transparent 56%);
-  opacity: calc(0.45 + var(--mag-lift, 0) * 0.2);
-}
-
-.magnetic-action {
-  will-change: transform;
+  will-change: auto;
 }
 
 .hero-backdrop {
@@ -380,12 +347,11 @@ html {
   inset: -4rem -2rem auto;
   height: 42rem;
   pointer-events: none;
-  filter: blur(6px);
   background:
     radial-gradient(circle at 10% 10%, rgba(251, 191, 36, 0.22), transparent 25%),
     radial-gradient(circle at 90% 12%, rgba(34, 211, 238, 0.18), transparent 25%),
     linear-gradient(180deg, rgba(2, 6, 23, 0.15), transparent 58%);
-  transform: translate3d(0, calc(var(--scroll-depth) * 0.22), 0);
+  transform: none;
 }
 
 .hero-orb {
@@ -393,16 +359,16 @@ html {
 }
 
 .hero-orb-a {
-  transform: translate3d(0, calc(var(--scroll-depth) * 0.28), 0);
+  transform: none;
 }
 
 .hero-orb-b {
   animation-delay: -6s;
-  transform: translate3d(0, calc(var(--scroll-depth) * 0.42), 0);
+  transform: none;
 }
 
 .hero-shell-intro {
-  transform: translate3d(0, calc(var(--scroll-depth) * -0.04), 0);
+  transform: none;
 }
 
 .hero-loom {
@@ -425,15 +391,15 @@ html {
 }
 
 .loom-line-a {
-  transform: translateX(-50%) translateY(8rem) rotateX(72deg) translateZ(calc(var(--scroll-depth) * -0.3));
+  transform: translateX(-50%) translateY(8rem) rotateX(72deg);
 }
 
 .loom-line-b {
-  transform: translateX(-50%) translateY(15rem) rotateX(78deg) translateZ(calc(var(--scroll-depth) * -0.5));
+  transform: translateX(-50%) translateY(15rem) rotateX(78deg);
 }
 
 .loom-line-c {
-  transform: translateX(-50%) translateY(22rem) rotateX(84deg) translateZ(calc(var(--scroll-depth) * -0.7));
+  transform: translateX(-50%) translateY(22rem) rotateX(84deg);
 }
 
 .nav-link {
@@ -669,11 +635,8 @@ html {
   scroll-snap-align: start;
 }
 
-.project-card.magnetic {
-  transform:
-    translate3d(0, calc(var(--scroll-depth) * -0.04 - var(--mag-lift, 0) * 10px), 0)
-    rotateX(calc(4deg + var(--mag-rotate-x, 0deg)))
-    rotateY(var(--mag-rotate-y, 0deg));
+.project-card {
+  transform: none;
 }
 
 .project-card-featured {
@@ -761,13 +724,8 @@ html {
   padding: 0.75rem;
   border-radius: 1.4rem;
   transform-style: preserve-3d;
-  transform:
-    rotateX(var(--hero-tilt-y, 0deg))
-    rotateY(var(--hero-tilt-x, 0deg))
-    translateZ(calc(var(--scroll-depth) * 0.15));
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease;
+  transform: none;
+  transition: box-shadow 180ms ease;
 }
 
 .portrait-card {
@@ -1098,16 +1056,10 @@ html {
   }
 
   .panel-animate,
-  .magnetic,
-  .project-card.magnetic,
+  .project-card,
   .portrait-stage {
     transform: none !important;
     transition: none !important;
-  }
-
-  .magnetic::before,
-  .magnetic::after {
-    opacity: 0.9;
   }
 
   .project-scroll-hint {

@@ -2,7 +2,6 @@ import {
   useEffect,
   useState,
   type CSSProperties,
-  type PointerEvent as ReactPointerEvent,
 } from 'react'
 import { postJson } from './lib/api'
 import { portfolio } from './content/portfolio'
@@ -32,12 +31,10 @@ const storyMeta: Record<
 }
 
 function App() {
-  const [heroTilt, setHeroTilt] = useState({ x: 0, y: 0 })
   const [scrollDepth, setScrollDepth] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeStory, setActiveStory] = useState<StoryKey>('hero')
   const [isLoaded, setIsLoaded] = useState(false)
-  const [enableMotion, setEnableMotion] = useState(false)
   const [contactStatus, setContactStatus] = useState<
     | { type: 'idle' }
     | { type: 'submitting' }
@@ -51,22 +48,11 @@ function App() {
   >({})
 
   const heroStyle = {
-    '--hero-tilt-x': `${heroTilt.x}deg`,
-    '--hero-tilt-y': `${heroTilt.y}deg`,
     '--scroll-depth': `${scrollDepth}px`,
     '--scroll-progress': scrollProgress.toFixed(4),
-    '--hero-scale': (1 + scrollProgress * 0.08).toFixed(4),
-    '--hero-shift': `${Math.round(scrollProgress * -36)}px`,
-    '--hero-title-shift': `${Math.round(scrollProgress * -26)}px`,
-    '--hero-copy-shift': `${Math.round(scrollProgress * -12)}px`,
   } as CSSProperties
 
   useEffect(() => {
-    const motionQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const syncMotion = () => setEnableMotion(motionQuery.matches)
-    syncMotion()
-    motionQuery.addEventListener('change', syncMotion)
-
     const revealItems = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
     const storyItems = Array.from(document.querySelectorAll<HTMLElement>('[data-story-section]'))
 
@@ -133,7 +119,6 @@ function App() {
     const bootTimer = window.setTimeout(() => setIsLoaded(true), 1200)
 
     return () => {
-      motionQuery.removeEventListener('change', syncMotion)
       observer.disconnect()
       storyObserver.disconnect()
       window.removeEventListener('scroll', onScroll)
@@ -142,32 +127,6 @@ function App() {
       if (frame) window.cancelAnimationFrame(frame)
     }
   }, [])
-
-  const handleMagneticMove = (event: ReactPointerEvent<HTMLElement>) => {
-    if (!enableMotion) return
-    const element = event.currentTarget
-    const rect = element.getBoundingClientRect()
-    const x = (event.clientX - rect.left) / rect.width
-    const y = (event.clientY - rect.top) / rect.height
-    const rotateX = ((0.5 - y) * 12).toFixed(2)
-    const rotateY = ((x - 0.5) * 16).toFixed(2)
-
-    element.style.setProperty('--mag-x', `${(x * 100).toFixed(2)}%`)
-    element.style.setProperty('--mag-y', `${(y * 100).toFixed(2)}%`)
-    element.style.setProperty('--mag-rotate-x', `${rotateX}deg`)
-    element.style.setProperty('--mag-rotate-y', `${rotateY}deg`)
-    element.style.setProperty('--mag-lift', '1')
-  }
-
-  const handleMagneticLeave = (event: ReactPointerEvent<HTMLElement>) => {
-    if (!enableMotion) return
-    const element = event.currentTarget
-    element.style.setProperty('--mag-x', '50%')
-    element.style.setProperty('--mag-y', '50%')
-    element.style.setProperty('--mag-rotate-x', '0deg')
-    element.style.setProperty('--mag-rotate-y', '0deg')
-    element.style.setProperty('--mag-lift', '0')
-  }
 
   return (
     <div className="portfolio-shell" data-story={activeStory}>
@@ -237,20 +196,6 @@ function App() {
           className="hero-grid relative overflow-hidden pt-10 md:pt-16"
           style={heroStyle}
           data-story-section="hero"
-          onPointerMove={(event) => {
-            if (!enableMotion) return
-            const rect = event.currentTarget.getBoundingClientRect()
-            const x = (event.clientX - rect.left) / rect.width - 0.5
-            const y = (event.clientY - rect.top) / rect.height - 0.5
-            setHeroTilt({
-              x: Math.max(-7, Math.min(7, x * 14)),
-              y: Math.max(-6, Math.min(6, -y * 12)),
-            })
-          }}
-          onPointerLeave={() => {
-            if (!enableMotion) return
-            setHeroTilt({ x: 0, y: 0 })
-          }}
         >
           <div className="hero-backdrop" />
           <div className="absolute left-[-7rem] top-16 -z-10 h-72 w-72 rounded-full bg-amber-400/12 blur-3xl hero-orb hero-orb-a" />
@@ -263,10 +208,8 @@ function App() {
 
           <div className="grid gap-6 lg:grid-cols-[1.12fr_0.88fr] lg:items-stretch">
             <div
-              className="panel panel-hero panel-animate magnetic reveal p-6 sm:p-8 lg:p-10"
+              className="panel panel-hero panel-animate reveal p-6 sm:p-8 lg:p-10"
               data-reveal
-              onPointerMove={handleMagneticMove}
-              onPointerLeave={handleMagneticLeave}
             >
               <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/20 bg-amber-300/8 px-3 py-1 text-xs font-medium text-amber-100">
                 <span className="h-2 w-2 rounded-full bg-amber-300" />
@@ -296,29 +239,13 @@ function App() {
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <a
-                  className="primary-button magnetic-action"
-                  href="#work"
-                  onPointerMove={handleMagneticMove}
-                  onPointerLeave={handleMagneticLeave}
-                >
+                <a className="primary-button" href="#work">
                   Explore selected work
                 </a>
-                <a
-                  className="secondary-button magnetic-action"
-                  href={resumeUrl}
-                  download="Dhruv-Patel-Resume.pdf"
-                  onPointerMove={handleMagneticMove}
-                  onPointerLeave={handleMagneticLeave}
-                >
+                <a className="secondary-button" href={resumeUrl} download="Dhruv-Patel-Resume.pdf">
                   Download resume
                 </a>
-                <a
-                  className="text-link magnetic-action"
-                  href="#contact"
-                  onPointerMove={handleMagneticMove}
-                  onPointerLeave={handleMagneticLeave}
-                >
+                <a className="text-link" href="#contact">
                   Contact me
                 </a>
               </div>
@@ -337,10 +264,8 @@ function App() {
 
             <div className="grid gap-6">
               <div
-                className="panel portrait-panel panel-animate magnetic reveal p-4 sm:p-5"
+                className="panel portrait-panel panel-animate reveal p-4 sm:p-5"
                 data-reveal
-                onPointerMove={handleMagneticMove}
-                onPointerLeave={handleMagneticLeave}
               >
                 <div className="portrait-stage">
                   <div className="portrait-orb portrait-orb-one" />
@@ -372,10 +297,8 @@ function App() {
               </div>
 
               <div
-                className="panel panel-animate magnetic reveal p-6 sm:p-7"
+                className="panel panel-animate reveal p-6 sm:p-7"
                 data-reveal
-                onPointerMove={handleMagneticMove}
-                onPointerLeave={handleMagneticLeave}
               >
                 <div className="flex items-center justify-between gap-4">
                   <div>
@@ -408,10 +331,8 @@ function App() {
               </div>
 
               <div
-                className="panel panel-animate magnetic reveal p-6 sm:p-7"
+                className="panel panel-animate reveal p-6 sm:p-7"
                 data-reveal
-                onPointerMove={handleMagneticMove}
-                onPointerLeave={handleMagneticLeave}
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>
@@ -457,12 +378,10 @@ function App() {
               {[featuredProject, ...secondaryProjects].map((project, index) => (
                 <article
                   key={project.title}
-                  className={`project-card panel panel-animate magnetic ${
+                  className={`project-card panel panel-animate ${
                     index === 0 ? 'project-card-featured' : ''
                   }`}
                   data-reveal
-                  onPointerMove={handleMagneticMove}
-                  onPointerLeave={handleMagneticLeave}
                 >
                   <div className="project-card-glow" aria-hidden="true" />
                   <div className="project-card-inner">
@@ -520,10 +439,8 @@ function App() {
             {portfolio.skills.map((group) => (
               <div
                 key={group.group}
-                className="panel panel-animate magnetic reveal p-6"
+                className="panel panel-animate reveal p-6"
                 data-reveal
-                onPointerMove={handleMagneticMove}
-                onPointerLeave={handleMagneticLeave}
               >
                 <p className="text-sm font-semibold text-white">{group.group}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -551,10 +468,8 @@ function App() {
             {portfolio.experience.map((entry, index) => (
               <article
                 key={entry.title}
-                className="panel panel-animate magnetic reveal p-6"
+                className="panel panel-animate reveal p-6"
                 data-reveal
-                onPointerMove={handleMagneticMove}
-                onPointerLeave={handleMagneticLeave}
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
@@ -585,10 +500,8 @@ function App() {
         <section className="section-block reveal" data-reveal data-story-section="education">
           <div className="grid gap-4 lg:grid-cols-2">
             <div
-              className="panel panel-animate magnetic reveal p-6"
+              className="panel panel-animate reveal p-6"
               data-reveal
-              onPointerMove={handleMagneticMove}
-              onPointerLeave={handleMagneticLeave}
             >
               <div className="section-heading compact">
                 <p className="section-kicker">Education</p>
@@ -619,11 +532,9 @@ function App() {
 
             <div
               id="contact"
-              className="panel panel-animate magnetic reveal p-6"
+              className="panel panel-animate reveal p-6"
               data-reveal
               data-story-section="contact"
-              onPointerMove={handleMagneticMove}
-              onPointerLeave={handleMagneticLeave}
             >
               <div className="section-heading compact">
                 <p className="section-kicker">Contact</p>
@@ -668,11 +579,9 @@ function App() {
                     </a>
                   </div>
                   <a
-                    className="secondary-button magnetic-action w-full justify-center"
+                    className="secondary-button w-full justify-center"
                     href={resumeUrl}
                     download="Dhruv-Patel-Resume.pdf"
-                    onPointerMove={handleMagneticMove}
-                    onPointerLeave={handleMagneticLeave}
                   >
                     Download resume
                   </a>
@@ -766,9 +675,7 @@ function App() {
                         setContactStatus({ type: 'success' })
                         setContact({ name: '', email: '', subject: '', message: '' })
                       }}
-                      className="primary-button magnetic-action w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
-                      onPointerMove={handleMagneticMove}
-                      onPointerLeave={handleMagneticLeave}
+                      className="primary-button w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {contactStatus.type === 'submitting' ? 'Sending...' : 'Send message'}
                     </button>
