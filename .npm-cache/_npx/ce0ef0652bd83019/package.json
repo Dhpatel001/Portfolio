@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@netlify/mcp": "^1.15.1"
+  },
+  "_npx": {
+    "packages": [
+      "@netlify/mcp@latest"
+    ]
+  }
+}
