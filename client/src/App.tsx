@@ -277,10 +277,6 @@ function App() {
                       src={portraitWide}
                       alt="Dhruv Patel standing outdoors with a city skyline behind him"
                     />
-                    <div className="portrait-caption">
-                      <p className="portrait-caption-kicker">Featured portrait</p>
-                      <p className="portrait-caption-title">A clean, confident visual focal point.</p>
-                    </div>
                   </div>
                   <div className="portrait-card portrait-card-float">
                     <img
@@ -288,10 +284,6 @@ function App() {
                       src={portraitClose}
                       alt="Close-up portrait of Dhruv Patel"
                     />
-                    <div className="portrait-float-copy">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">3D layer</p>
-                      <p className="mt-2 text-sm font-medium text-white">Subtle depth, motion, and parallax.</p>
-                    </div>
                   </div>
                 </div>
               </div>

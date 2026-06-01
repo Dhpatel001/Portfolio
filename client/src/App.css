@@ -754,13 +754,6 @@ html {
   transform: translate3d(0, 0, 88px) rotate(4deg);
 }
 
-.portrait-caption {
-  left: auto;
-  right: 0.75rem;
-  bottom: 0.75rem;
-  width: 50%;
-}
-
 .portrait-image {
   display: block;
   width: 100%;
@@ -773,40 +766,6 @@ html {
 .portrait-image-close {
   height: 10rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.portrait-caption,
-.portrait-float-copy {
-  position: absolute;
-  left: 1rem;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 2;
-  padding: 0.9rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1rem;
-  background: rgba(2, 6, 23, 0.55);
-  backdrop-filter: blur(10px);
-}
-
-.portrait-caption-kicker {
-  color: var(--brand-amber);
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-}
-
-.portrait-caption-title {
-  margin-top: 0.4rem;
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.portrait-float-copy {
-  position: static;
-  margin: 0.75rem;
-  background: rgba(2, 6, 23, 0.7);
 }
 
 .portrait-orb,
@@ -1020,12 +979,20 @@ html {
   header .secondary-button {
     display: none !important;
   }
+
+  header .story-chip {
+    display: none !important;
+  }
+
+  header nav {
+    display: none !important;
+  }
 }
 
 @media (max-width: 640px) {
   .portfolio-shell > header .mx-auto {
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: nowrap;
     gap: 0.5rem;
   }
@@ -1046,6 +1013,7 @@ html {
   }
 
   .portfolio-shell > header .header-actions {
+    margin-left: auto;
     flex-shrink: 0;
   }
 
@@ -1119,17 +1087,6 @@ html {
 
   .portrait-card-float {
     display: none !important;
-  }
-
-  .portrait-caption {
-    left: 1rem !important;
-    right: 1rem !important;
-    width: auto !important;
-    backdrop-filter: none;
-  }
-
-  .portrait-float-copy {
-    backdrop-filter: none;
   }
 
   .project-card,
