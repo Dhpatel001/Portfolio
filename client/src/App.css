@@ -987,6 +987,10 @@ html {
   header nav {
     display: none !important;
   }
+
+  header .logo-link p:last-child {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1044,6 +1048,11 @@ html {
     width: 100%;
   }
 
+  .hero-intro-card .hero-avatar {
+    width: 3.25rem;
+    height: 3.25rem;
+  }
+
   .panel {
     backdrop-filter: none;
   }
@@ -1081,11 +1090,7 @@ html {
     min-height: auto;
   }
 
-  .portrait-card-main {
-    min-height: 20rem;
-  }
-
-  .portrait-card-float {
+  .portrait-panel {
     display: none !important;
   }
 
