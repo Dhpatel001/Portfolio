@@ -150,7 +150,7 @@ function App() {
       </div>
       <header className="sticky top-0 z-30 border-b border-white/8 bg-slate-950/78 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <a href="#top" className="flex items-center gap-3">
+          <a href="#top" className="logo-link flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/12 bg-white/6 text-sm font-semibold text-white shadow-[0_20px_60px_-25px_rgba(251,191,36,0.45)]">
               DP
             </span>
@@ -175,7 +175,7 @@ function App() {
             </a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="header-actions flex items-center gap-3">
             <div className="story-chip hidden xl:flex">
               <span className="story-chip-label">{storyMeta[activeStory].label}</span>
               <span className="story-chip-title">{storyMeta[activeStory].title}</span>

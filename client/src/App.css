@@ -748,10 +748,17 @@ html {
 
 .portrait-card-float {
   position: absolute;
-  right: 0.5rem;
-  bottom: -0.1rem;
+  left: 0.75rem;
+  bottom: 0.5rem;
   width: min(42%, 16rem);
-  transform: translate3d(0, 0, 88px) rotate(-4deg);
+  transform: translate3d(0, 0, 88px) rotate(4deg);
+}
+
+.portrait-caption {
+  left: auto;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  width: 50%;
 }
 
 .portrait-image {
@@ -1003,15 +1010,43 @@ html {
   }
 }
 
+@media (max-width: 1279px) {
+  .story-chip {
+    display: none !important;
+  }
+}
+
+@media (max-width: 639px) {
+  header .secondary-button {
+    display: none !important;
+  }
+}
+
 @media (max-width: 640px) {
   .portfolio-shell > header .mx-auto {
-    align-items: flex-start;
-    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
   }
 
-  .portfolio-shell > header .flex.items-center.gap-3 {
-    flex-wrap: wrap;
-    justify-content: flex-end;
+  .portfolio-shell > header .logo-link {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .portfolio-shell > header .logo-link div {
+    min-width: 0;
+  }
+
+  .portfolio-shell > header .logo-link p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
+
+  .portfolio-shell > header .header-actions {
+    flex-shrink: 0;
   }
 
   .section-block {
@@ -1083,13 +1118,16 @@ html {
   }
 
   .portrait-card-float {
-    position: static;
-    width: 100%;
-    margin-top: 1rem;
-    transform: none;
+    display: none !important;
   }
 
-  .portrait-caption,
+  .portrait-caption {
+    left: 1rem !important;
+    right: 1rem !important;
+    width: auto !important;
+    backdrop-filter: none;
+  }
+
   .portrait-float-copy {
     backdrop-filter: none;
   }
