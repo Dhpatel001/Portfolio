@@ -264,7 +264,7 @@ function App() {
 
             <div className="grid gap-6">
               <div
-                className="panel portrait-panel panel-animate reveal p-4 sm:p-5"
+                className="panel portrait-panel hidden lg:block panel-animate reveal p-4 sm:p-5"
                 data-reveal
               >
                 <div className="portrait-stage">

@@ -975,7 +975,7 @@ html {
   }
 }
 
-@media (max-width: 639px) {
+@media (max-width: 767px) {
   header .secondary-button {
     display: none !important;
   }
@@ -1088,10 +1088,6 @@ html {
 
   .portrait-stage {
     min-height: auto;
-  }
-
-  .portrait-panel {
-    display: none !important;
   }
 
   .project-card,
