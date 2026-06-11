@@ -1,8 +1,8 @@
 :root {
   --brand-amber: #fbbf24;
   --brand-cyan: #22d3ee;
-  --brand-ink: #020617;
-  --brand-text: #e2e8f0;
+  --brand-ink: #17130a;
+  --brand-text: #ece1d1;
   --brand-border: rgba(255, 255, 255, 0.1);
   --story-accent: #fbbf24;
   --story-accent-2: #22d3ee;
@@ -23,7 +23,7 @@ html {
   background:
     radial-gradient(circle at top, rgba(34, 211, 238, 0.08), transparent 28%),
     radial-gradient(circle at 20% 0%, rgba(251, 191, 36, 0.08), transparent 30%),
-    linear-gradient(180deg, #020617 0%, #030712 40%, #020617 100%);
+    linear-gradient(180deg, #17130a 0%, #120e06 40%, #17130a 100%);
 }
 
 .portfolio-shell[data-story='work'] {
@@ -1156,4 +1156,54 @@ html {
     transform: none !important;
     transition: none !important;
   }
+}
+
+/* Google Stitch Design System Classes */
+.glass-panel {
+    background: rgba(36, 31, 21, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    transition: background-color 300ms, box-shadow 300ms, transform 300ms;
+}
+.glass-panel:hover {
+    background: rgba(36, 31, 21, 0.8);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+}
+
+.bg-glow-cyan {
+    background: radial-gradient(circle at center, rgba(0, 203, 230, 0.15) 0%, transparent 70%);
+}
+.bg-glow-amber {
+    background: radial-gradient(circle at center, rgba(251, 191, 36, 0.15) 0%, transparent 70%);
+}
+
+.text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(to right, #ffe1a7, #5de6ff);
+}
+
+/* Ambient background animation */
+@keyframes subtle-drift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(2%, 2%) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+.ambient-blob {
+    animation: subtle-drift 20s infinite ease-in-out alternate;
+}
+
+/* Focus state for inputs */
+.input-glow:focus {
+    outline: none;
+    border-bottom-color: #5de6ff;
+    box-shadow: 0 4px 10px -2px rgba(93, 230, 255, 0.3);
+    animation: pulse-border 2s infinite alternate;
+}
+@keyframes pulse-border {
+    0% { border-bottom-color: rgba(93, 230, 255, 0.5); }
+    100% { border-bottom-color: rgba(93, 230, 255, 1); }
 }

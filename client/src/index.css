@@ -13,8 +13,13 @@ body,
 body {
   margin: 0;
   color-scheme: dark;
-  font-family: "Segoe UI", "Trebuchet MS", system-ui, sans-serif;
-  background: #020617;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  background: #17130a;
+  color: #ece1d1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Outfit", sans-serif;
 }
 
 * {
@@ -23,4 +28,5 @@ body {
 
 ::selection {
   background: rgba(251, 191, 36, 0.35);
+  color: #17130a;
 }

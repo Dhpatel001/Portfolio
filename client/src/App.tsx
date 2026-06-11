@@ -7,10 +7,7 @@ import { postJson } from './lib/api'
 import { portfolio } from './content/portfolio'
 import './App.css'
 
-const featuredProject = portfolio.projects[0]
-const secondaryProjects = portfolio.projects.slice(1)
 const resumeUrl = '/resume.pdf'
-const portraitWide = '/images/portrait-wide.jpg'
 const portraitClose = '/images/portrait-close.jpg'
 
 type StoryKey = 'hero' | 'work' | 'skills' | 'experience' | 'education' | 'contact'
@@ -42,7 +39,7 @@ function App() {
     | { type: 'error'; message: string }
   >({ type: 'idle' })
 
-  const [contact, setContact] = useState({ name: '', email: '', subject: '', message: '' })
+  const [contact, setContact] = useState({ name: '', email: '', subject: 'Redesign Discussion', message: '' })
   const [contactErrors, setContactErrors] = useState<
     Partial<Record<keyof typeof contact, string>>
   >({})
@@ -128,319 +125,252 @@ function App() {
     }
   }, [])
 
-  return (
-    <div className="portfolio-shell" data-story={activeStory}>
-      <div className="portfolio-noise" />
-      <div className="floating-field" aria-hidden="true">
-        <span className="floating-object floating-object-cube" />
-        <span className="floating-object floating-object-ring" />
-        <span className="floating-object floating-object-orb" />
-        <span className="floating-object floating-object-card" />
+  const getProjectCover = (title: string) => {
+    if (title.toLowerCase().includes('voicepost')) {
+      return (
+        <img
+          alt="VoicePost cover"
+          className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXXmqFweOUNBPK111HSLRBdAb2oLETvj30oAr3RsIkz55vc9ZdOWmHJ9YoYuY4VJj471MT_aQlQuZQd7eC5D-jwGDV86E0Y33Y7VSEBSQjNqkntwZe2a_f62yRZGNVfKB2KlF1RszKiFfhJEM_HHnDrCdABR9nuG0e9aAf5J-JuxLldvEIlMmkxtgbpxbl6uKQ-_Qd6mGCVH-cNwb9U8ETablqDscQcp9OB_AoUUT4rRtb9MXs-Fq40rxLtbBnFYmwOAy82z-_D0Yo"
+        />
+      )
+    }
+    if (title.toLowerCase().includes('reviewgenerator')) {
+      return (
+        <img
+          alt="ReviewGenerator cover"
+          className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuABdakL0YKmydzasgbHdD-HFO3Yz_X44UdLGg9Hd1KftKJHokIT8CAaGhFka32RHUaIQiN1eagGti6YpA_ZgaYroN7qDWHRX_fCoA7t9OrT8BzfvOi63VV7g98V6FOwxXcVsPbfKqR--WD2kYORVciMktbEiRLlYacG6wN3Ohmzgjsxdu4JVaUDrlSiR7Bhf06lDzq_zMkRnBG5RG3KfXumdqR7FYoe4jrDXY4OwRecNQsExzfqeUoxtuJLHGGSU6QBchW24QvJhKUk"
+        />
+      )
+    }
+    if (title.toLowerCase().includes('promptlab')) {
+      return (
+        <div className="w-full h-full flex items-center justify-center bg-[#241f15]/50 border-b border-white/5">
+          <span className="material-symbols-outlined text-[64px] text-slate-500 opacity-50 group-hover:text-[#5de6ff] group-hover:opacity-80 transition-all duration-500">model_training</span>
+        </div>
+      )
+    }
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-[#241f15]/50 border-b border-white/5">
+        <span className="material-symbols-outlined text-[64px] text-slate-500 opacity-50 group-hover:text-[#ffe1a7] group-hover:opacity-80 transition-all duration-500">monitor_heart</span>
       </div>
+    )
+  }
+
+  const getSkillGroupIcon = (group: string) => {
+    const g = group.toLowerCase()
+    if (g.includes('frontend')) return 'web'
+    if (g.includes('backend')) return 'dns'
+    if (g.includes('data') || g.includes('infra')) return 'hub'
+    return 'smart_toy'
+  }
+
+  return (
+    <div className="portfolio-shell bg-[#17130a] text-[#ece1d1]" data-story={activeStory}>
+      {/* Noise background */}
+      <div className="portfolio-noise" />
+      
+      {/* Global Cinematic Background Elements */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-cyan-400/5 blur-[120px] ambient-blob mix-blend-screen"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-amber-400/5 blur-[150px] ambient-blob mix-blend-screen" style={{ animationDelay: '-10s' }}></div>
+      </div>
+
+      {/* Page Loader */}
       <div className={`page-loader ${isLoaded ? 'page-loader-hidden' : ''}`} aria-hidden="true">
         <div className="page-loader-core">
           <div className="page-loader-ring page-loader-ring-a" />
           <div className="page-loader-ring page-loader-ring-b" />
           <div className="page-loader-ring page-loader-ring-c" />
-          <span className="page-loader-mark">DP</span>
+          <span className="page-loader-mark font-bold">DP</span>
         </div>
-        <p className="mt-5 text-xs uppercase tracking-[0.32em] text-slate-400">
-          Crafting the signature experience
+        <p className="mt-5 text-xs uppercase tracking-[0.32em] text-[#d3c5ac]">
+          Engineered with AI/ML Precision
         </p>
       </div>
-      <header className="sticky top-0 z-30 border-b border-white/8 bg-slate-950/78 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <a href="#top" className="logo-link flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/12 bg-white/6 text-sm font-semibold text-white shadow-[0_20px_60px_-25px_rgba(251,191,36,0.45)]">
-              DP
-            </span>
-            <div>
-              <p className="text-sm font-semibold tracking-wide text-white">{portfolio.name}</p>
-              <p className="text-xs text-slate-400">{portfolio.headline}</p>
-            </div>
-          </a>
 
-          <nav className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
-            <a className="nav-link" href="#work">
-              Work
-            </a>
-            <a className="nav-link" href="#skills">
-              Skills
-            </a>
-            <a className="nav-link" href="#experience">
-              Experience
-            </a>
-            <a className="nav-link" href="#contact">
-              Contact
-            </a>
-          </nav>
+      {/* Top Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-[#17130a]/70 backdrop-blur-3xl border-b border-white/10 shadow-[0_0_20px_rgba(255,225,167,0.05)]">
+        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
+          <a className="text-2xl font-semibold text-[#ffe1a7] tracking-tighter" href="#top">DP</a>
+          
+          <ul className="hidden md:flex gap-8 items-center">
+            <li>
+              <a className="text-[#d3c5ac] hover:text-[#ffe1a7] transition-all px-4 py-2 rounded-lg font-medium text-sm hover:bg-white/5" href="#work">Work</a>
+            </li>
+            <li>
+              <a className="text-[#d3c5ac] hover:text-[#ffe1a7] transition-all px-4 py-2 rounded-lg font-medium text-sm hover:bg-white/5" href="#skills">Skills</a>
+            </li>
+            <li>
+              <a className="text-[#d3c5ac] hover:text-[#ffe1a7] transition-all px-4 py-2 rounded-lg font-medium text-sm hover:bg-white/5" href="#experience">Experience</a>
+            </li>
+            <li>
+              <a className="text-[#d3c5ac] hover:text-[#ffe1a7] transition-all px-4 py-2 rounded-lg font-medium text-sm hover:bg-white/5" href="#contact">Contact</a>
+            </li>
+          </ul>
 
-          <div className="header-actions flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="story-chip hidden xl:flex">
               <span className="story-chip-label">{storyMeta[activeStory].label}</span>
               <span className="story-chip-title">{storyMeta[activeStory].title}</span>
             </div>
-            <a className="secondary-button hidden sm:inline-flex" href="#contact">
-              Let's talk
-            </a>
-            <a className="primary-button" href={resumeUrl} download="Dhruv-Patel-Resume.pdf">
-              Download resume
+            <a 
+              className="bg-[#fbbf24] text-[#402d00] font-semibold text-xs uppercase tracking-wider px-6 py-3 rounded-lg hover:bg-[#ffe1a7] transition-colors flex items-center gap-2 active:scale-95 duration-200"
+              href={resumeUrl}
+              download="Dhruv-Patel-Resume.pdf"
+            >
+              Download Resume
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>download</span>
             </a>
           </div>
         </div>
-      </header>
+      </nav>
 
-      <main id="top" className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="scroll-trace" aria-hidden="true" />
-        <section
-          className="hero-grid relative overflow-hidden pt-10 md:pt-16"
-          style={heroStyle}
+      {/* Main Content shell */}
+      <main id="top" className="pt-[100px] max-w-7xl mx-auto px-6 relative z-10">
+        <div className="scroll-trace" aria-hidden="true" style={heroStyle} />
+
+        {/* Hero Section */}
+        <section 
+          className="min-h-[70vh] flex flex-col justify-center relative mt-8 mb-16"
           data-story-section="hero"
         >
-          <div className="hero-backdrop" />
-          <div className="absolute left-[-7rem] top-16 -z-10 h-72 w-72 rounded-full bg-amber-400/12 blur-3xl hero-orb hero-orb-a" />
-          <div className="absolute right-[-6rem] top-28 -z-10 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl hero-orb hero-orb-b" />
-          <div className="hero-loom" aria-hidden="true">
-            <div className="loom-line loom-line-a" />
-            <div className="loom-line loom-line-b" />
-            <div className="loom-line loom-line-c" />
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-[1.12fr_0.88fr] lg:items-stretch">
-            <div
-              className="panel panel-hero panel-animate reveal p-6 sm:p-8 lg:p-10"
-              data-reveal
-            >
-              <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/20 bg-amber-300/8 px-3 py-1 text-xs font-medium text-amber-100">
-                <span className="h-2 w-2 rounded-full bg-amber-300" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7 flex flex-col gap-6 reveal" data-reveal>
+              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-amber-300/20 bg-amber-300/8 px-3 py-1 text-xs font-medium text-amber-200">
+                <span className="h-2 w-2 rounded-full bg-amber-300 animate-pulse" />
                 Open to product and full-stack roles
               </div>
-
-              <div className="hero-intro-card mt-5">
-                <img
-                  className="hero-avatar"
-                  src={portraitClose}
-                  alt="Dhruv Patel portrait"
-                />
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Profile focus</p>
-                  <p className="mt-1 text-sm font-medium text-white">
-                    Product-minded developer with a more cinematic visual identity.
-                  </p>
-                </div>
-              </div>
-
-              <h1 className="hero-title mt-6 max-w-3xl text-balance text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Portfolio design with a sharper point of view.
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#ece1d1] leading-none">
+                Portfolio design with a <span className="text-gradient">sharper point of view.</span>
               </h1>
-
-              <p className="hero-copy mt-5 max-w-2xl text-pretty text-base leading-8 text-slate-300 sm:text-lg">
+              
+              <p className="text-lg text-[#d3c5ac] max-w-[620px] leading-relaxed">
                 {portfolio.summary}
               </p>
-
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <a className="primary-button" href="#work">
-                  Explore selected work
-                </a>
-                <a className="secondary-button" href={resumeUrl} download="Dhruv-Patel-Resume.pdf">
-                  Download resume
-                </a>
-                <a className="text-link" href="#contact">
-                  Contact me
-                </a>
-              </div>
-
-              <div className="hero-stats mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              
+              <div className="flex flex-wrap gap-3 mt-4">
                 {portfolio.highlights.map((highlight) => (
-                  <div key={highlight.label} className="micro-card">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-                      {highlight.label}
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-white">{highlight.value}</p>
+                  <div key={highlight.label} className="glass-panel px-4 py-3 rounded-xl flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[#5de6ff]">{highlight.label === 'Stack' ? 'code' : highlight.label === 'AI' ? 'memory' : highlight.label === 'Payments' ? 'payments' : 'bolt'}</span>
+                    <span className="font-mono text-sm text-[#ece1d1]">{highlight.value}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="grid gap-6">
-              <div
-                className="panel portrait-panel hidden lg:block panel-animate reveal p-4 sm:p-5"
-                data-reveal
-              >
-                <div className="portrait-stage">
-                  <div className="portrait-orb portrait-orb-one" />
-                  <div className="portrait-orb portrait-orb-two" />
-                  <div className="portrait-rings" />
-                  <div className="portrait-card portrait-card-main">
-                    <img
-                      className="portrait-image"
-                      src={portraitWide}
-                      alt="Dhruv Patel standing outdoors with a city skyline behind him"
-                    />
-                  </div>
-                  <div className="portrait-card portrait-card-float">
-                    <img
-                      className="portrait-image portrait-image-close"
-                      src={portraitClose}
-                      alt="Close-up portrait of Dhruv Patel"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className="panel panel-animate reveal p-6 sm:p-7"
-                data-reveal
-              >
-                <div className="flex items-center justify-between gap-4">
+            {/* Glassmorphic Photo Stage */}
+            <div className="lg:col-span-5 relative flex justify-center mt-8 lg:mt-0 reveal" data-reveal>
+              <div className="absolute inset-0 bg-glow-cyan pointer-events-none rounded-full blur-3xl"></div>
+              <div className="glass-panel p-2 rounded-2xl relative w-full max-w-[360px] aspect-[4/5] overflow-hidden transform hover:scale-[1.02] transition-transform duration-500 shadow-2xl">
+                <img 
+                  alt="Portrait of Dhruv Patel" 
+                  className="w-full h-full object-cover rounded-xl filter grayscale-[20%] contrast-110 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-700" 
+                  src={portraitClose}
+                />
+                
+                <div className="absolute bottom-4 left-4 right-4 glass-panel p-4 rounded-xl flex justify-between items-center bg-[#241f15]/80">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Profile</p>
-                    <h2 className="mt-2 text-xl font-semibold text-white">A builder who ships clean product experiences.</h2>
+                    <p className="text-[10px] font-semibold text-[#fbbf24] uppercase tracking-widest">Status</p>
+                    <p className="text-xs font-semibold text-[#ece1d1] mt-0.5">{portfolio.location}</p>
                   </div>
-                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-200">
-                    Available for work
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                   </span>
                 </div>
-
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  <div className="info-card">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Location</p>
-                    <p className="mt-2 text-sm text-slate-200">{portfolio.location}</p>
-                  </div>
-                  <div className="info-card">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Current focus</p>
-                    <p className="mt-2 text-sm text-slate-200">AI-enabled SaaS, dashboards, and polished systems</p>
-                  </div>
-                  <div className="info-card">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Tools</p>
-                    <p className="mt-2 text-sm text-slate-200">{portfolio.roles.join(' | ')}</p>
-                  </div>
-                  <div className="info-card">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Resume</p>
-                    <p className="mt-2 text-sm text-slate-200">One click PDF download from the docs folder</p>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className="panel panel-animate reveal p-6 sm:p-7"
-                data-reveal
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Snapshot</p>
-                    <h2 className="mt-2 text-xl font-semibold text-white">What stands out immediately</h2>
-                  </div>
-                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-                    Fast, practical, production-minded
-                  </span>
-                </div>
-
-                <ul className="mt-5 space-y-3 text-sm leading-7 text-slate-300">
-                  <li className="bullet-item">
-                    Full-stack SaaS builds with authentication, billing, email automation, and rate limiting.
-                  </li>
-                  <li className="bullet-item">
-                    Real-time product work including Socket.io chat, role-based dashboards, and secure file flows.
-                  </li>
-                  <li className="bullet-item">
-                    Strong frontend polish with responsive layouts, clear hierarchy, and modern UI systems.
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="work" className="section-block reveal" data-reveal data-story-section="work">
-          <div className="section-heading">
-            <p className="section-kicker">Selected work</p>
-            <h2 className="section-title">A snap-scrolling showcase that feels like a product demo rail.</h2>
-            <p className="section-copy">
-              Horizontal momentum, tighter narrative cards, and a single rail that makes each project feel like a premium slide.
-            </p>
-          </div>
+        {/* Selected Work Section */}
+        <section 
+          className="mt-16 mb-16 relative reveal" 
+          id="work"
+          data-reveal
+          data-story-section="work"
+        >
+          <div className="absolute top-1/2 left-[-10%] w-[30vw] h-[30vw] bg-glow-amber opacity-20 pointer-events-none mix-blend-screen rounded-full blur-3xl"></div>
+          
+          <h2 className="text-3xl font-semibold text-[#ece1d1] mb-8 flex items-center gap-4">
+            <span className="w-8 h-[1px] bg-[#fbbf24]"></span>
+            Selected Work
+          </h2>
 
-          <div className="project-scroll mt-8">
-            <div className="project-scroll-hint">
-              <span className="project-scroll-dot" />
-              Swipe or scroll horizontally
-            </div>
-            <div className="project-rail">
-              {[featuredProject, ...secondaryProjects].map((project, index) => (
-                <article
-                  key={project.title}
-                  className={`project-card panel panel-animate ${
-                    index === 0 ? 'project-card-featured' : ''
-                  }`}
-                  data-reveal
-                >
-                  <div className="project-card-glow" aria-hidden="true" />
-                  <div className="project-card-inner">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-                          {String(index + 1).padStart(2, '0')}
-                        </p>
-                        <h3 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">{project.title}</h3>
-                        <p className="mt-2 text-sm font-medium text-slate-300">{project.subtitle}</p>
-                      </div>
-                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-                        {project.tags[0]}
-                      </span>
-                    </div>
-
-                    <div className="mt-6 flex flex-wrap gap-2">
-                      <span className="rounded-full border border-white/10 bg-slate-950/50 px-3 py-1 text-xs text-slate-200">
-                        {project.stack}
-                      </span>
-                      {project.tags.slice(1).map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <ul className="mt-6 space-y-3 text-sm leading-7 text-slate-300">
-                      {project.bullets.map((bullet) => (
-                        <li key={bullet} className="bullet-item">
-                          {bullet}
-                        </li>
-                      ))}
-                    </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+            {portfolio.projects.map((project, index) => (
+              <article key={project.title} className="glass-panel rounded-2xl overflow-hidden group flex flex-col h-full hover:border-[#5de6ff]/30 transition-all">
+                <div className="h-48 relative overflow-hidden bg-[#241f15]/60">
+                  {getProjectCover(project.title)}
+                  <div className="absolute top-4 right-4 flex gap-2">
+                    <span className="bg-[#5de6ff]/10 border border-[#5de6ff]/30 text-[#5de6ff] font-mono text-[10px] px-2 py-1 rounded-full backdrop-blur-sm">
+                      {project.tags[0]}
+                    </span>
                   </div>
-                </article>
-              ))}
-            </div>
+                </div>
+                
+                <div className="p-6 flex-1 flex flex-col">
+                  <span className="text-xs font-mono text-[#fbbf24] uppercase tracking-wider mb-1">Project {index + 1}</span>
+                  <h3 className="text-xl font-bold text-[#ece1d1] mb-2">{project.title}</h3>
+                  <p className="text-[#d3c5ac] text-sm mb-4 leading-relaxed">{project.subtitle}</p>
+                  
+                  <ul className="mb-6 space-y-2 text-xs leading-relaxed text-[#d3c5ac] flex-1">
+                    {project.bullets.map((bullet, idx) => (
+                      <li key={idx} className="bullet-item pl-4 relative before:content-[''] before:absolute before:left-0 before:top-1.5 before:w-1.5 before:h-1.5 before:bg-[#fbbf24] before:rounded-full">
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                    {project.tags.slice(1).map((tag) => (
+                      <span key={tag} className="text-[10px] font-mono text-[#d3c5ac] bg-white/5 border border-white/5 px-2 py-0.5 rounded">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="pt-4 border-t border-white/5 flex justify-between items-center mt-auto">
+                    <span className="text-xs font-mono text-[#5de6ff]">{project.stack}</span>
+                    <a className="text-[#ece1d1] hover:text-[#fbbf24] transition-colors" href="https://github.com/Dhpatel001" target="_blank" rel="noreferrer">
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>open_in_new</span>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
 
-        <section id="skills" className="section-block reveal" data-reveal data-story-section="skills">
-          <div className="section-heading">
-            <p className="section-kicker">Capabilities</p>
-            <h2 className="section-title">Everything is grouped to read fast and feel intentional.</h2>
-            <p className="section-copy">
-              The layout is meant to make your strengths easy for a recruiter or founder to scan.
-            </p>
-          </div>
-
-          <div className="mt-8 grid gap-4 lg:grid-cols-2">
-            {portfolio.skills.map((group) => (
-              <div
-                key={group.group}
-                className="panel panel-animate reveal p-6"
-                data-reveal
+        {/* Capabilities Section */}
+        <section 
+          className="mt-16 mb-16 reveal" 
+          id="skills"
+          data-reveal
+          data-story-section="skills"
+        >
+          <h2 className="text-3xl font-semibold text-[#ece1d1] mb-8 flex items-center gap-4">
+            <span className="w-8 h-[1px] bg-[#5de6ff]"></span>
+            Technical Arsenal
+          </h2>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {portfolio.skills.map((group, idx) => (
+              <div 
+                key={group.group} 
+                className={`glass-panel p-6 rounded-2xl border-t-2 ${idx % 2 === 0 ? 'border-t-[#fbbf24]/50' : 'border-t-[#5de6ff]/50'}`}
               >
-                <p className="text-sm font-semibold text-white">{group.group}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
+                <h3 className="text-lg font-bold text-[#ece1d1] mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#fbbf24]">{getSkillGroupIcon(group.group)}</span>
+                  {group.group}
+                </h3>
+                
+                <div className="flex flex-wrap gap-2">
                   {group.items.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200"
-                    >
+                    <span key={item} className="bg-white/5 text-[#ece1d1] font-mono text-[11px] px-2.5 py-1 rounded border border-white/5">
                       {item}
                     </span>
                   ))}
@@ -450,247 +380,239 @@ function App() {
           </div>
         </section>
 
-        <section id="experience" className="section-block reveal" data-reveal data-story-section="experience">
-          <div className="section-heading">
-            <p className="section-kicker">Experience</p>
-            <h2 className="section-title">The work history is presented like a clean product timeline.</h2>
-          </div>
+        {/* Experience & Education Journey Section */}
+        <section 
+          className="mt-16 mb-16 relative reveal" 
+          id="experience"
+          data-reveal
+          data-story-section="experience"
+        >
+          <div className="absolute right-[-10%] top-0 w-[40vw] h-[40vw] bg-glow-cyan opacity-10 pointer-events-none mix-blend-screen rounded-full blur-3xl"></div>
+          
+          <h2 className="text-3xl font-semibold text-[#ece1d1] mb-8 flex items-center gap-4">
+            <span className="w-8 h-[1px] bg-[#fbbf24]"></span>
+            Journey
+          </h2>
 
-          <div className="mt-8 grid gap-4">
-            {portfolio.experience.map((entry, index) => (
-              <article
-                key={entry.title}
-                className="panel panel-animate reveal p-6"
-                data-reveal
-              >
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                      {String(index + 1).padStart(2, '0')}
-                    </p>
-                    <h3 className="mt-2 text-xl font-semibold text-white">{entry.title}</h3>
-                    <p className="mt-1 text-sm text-slate-400">
-                      {entry.company} | {entry.duration} | {entry.location}
-                    </p>
-                  </div>
-                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-200">
-                    Impact-first
+          <div className="relative pl-8 border-l border-white/10 space-y-12 z-10">
+            {/* Timeline Item 1: M.Tech Education */}
+            <div className="relative reveal" data-reveal>
+              <div className="absolute w-4 h-4 rounded-full bg-[#17130a] border-2 border-[#5de6ff] left-[-40px] top-2 shadow-[0_0_10px_rgba(93,230,255,0.5)]"></div>
+              <div className="glass-panel p-6 rounded-2xl">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
+                  <h3 className="text-xl font-bold text-[#ece1d1]">{portfolio.education[0].degree} — {portfolio.education[0].field}</h3>
+                  <span className="font-mono text-xs text-[#5de6ff] mt-1 md:mt-0 px-3 py-1 rounded-full bg-[#5de6ff]/5 border border-[#5de6ff]/10">
+                    {portfolio.education[0].duration} • {portfolio.education[0].notes}
                   </span>
                 </div>
-                <ul className="mt-5 grid gap-3 text-sm leading-7 text-slate-300">
-                  {entry.bullets.map((bullet) => (
-                    <li key={bullet} className="bullet-item">
-                      {bullet}
-                    </li>
+                <p className="text-sm text-[#d3c5ac]">{portfolio.education[0].school} | {portfolio.education[0].location}</p>
+              </div>
+            </div>
+
+            {/* Timeline Item 2: Grownited Internship */}
+            <div className="relative reveal" data-reveal>
+              <div className="absolute w-4 h-4 rounded-full bg-[#17130a] border-2 border-[#fbbf24] left-[-40px] top-2 shadow-[0_0_10px_rgba(251,191,36,0.3)]"></div>
+              <div className="glass-panel p-6 rounded-2xl">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
+                  <h3 className="text-xl font-bold text-[#ece1d1]">{portfolio.experience[0].title}</h3>
+                  <span className="font-mono text-xs text-[#fbbf24] mt-1 md:mt-0 px-3 py-1 rounded-full bg-[#fbbf24]/5 border border-[#fbbf24]/10">
+                    {portfolio.experience[0].duration}
+                  </span>
+                </div>
+                <p className="text-sm text-[#ece1d1] font-semibold">{portfolio.experience[0].company} | {portfolio.experience[0].location}</p>
+                
+                <ul className="mt-4 list-disc pl-5 text-sm text-[#d3c5ac] space-y-2 leading-relaxed">
+                  {portfolio.experience[0].bullets.map((bullet, idx) => (
+                    <li key={idx}>{bullet}</li>
                   ))}
                 </ul>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section-block reveal" data-reveal data-story-section="education">
-          <div className="grid gap-4 lg:grid-cols-2">
-            <div
-              className="panel panel-animate reveal p-6"
-              data-reveal
-            >
-              <div className="section-heading compact">
-                <p className="section-kicker">Education</p>
-                <h2 className="section-title">Academic background that supports the technical profile.</h2>
-              </div>
-
-              <div className="mt-6 grid gap-4">
-                {portfolio.education.map((entry) => (
-                  <div key={`${entry.degree}-${entry.school}`} className="info-card">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-white">
-                          {entry.degree} | {entry.field}
-                        </p>
-                        <p className="mt-1 text-sm text-slate-400">
-                          {entry.school} | {entry.location}
-                        </p>
-                      </div>
-                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-                        {entry.duration}
-                      </span>
-                    </div>
-                    {entry.notes ? <p className="mt-3 text-xs text-slate-400">{entry.notes}</p> : null}
-                  </div>
-                ))}
               </div>
             </div>
 
-            <div
-              id="contact"
-              className="panel panel-animate reveal p-6"
-              data-reveal
-              data-story-section="contact"
-            >
-              <div className="section-heading compact">
-                <p className="section-kicker">Contact</p>
-                <h2 className="section-title">A simple route for recruiters and collaborators.</h2>
-                <p className="section-copy">
-                  Direct contact info on the left, form submission on the right, and the resume always one click away.
-                </p>
+            {/* Timeline Item 3: B.E. Education */}
+            <div className="relative reveal" data-reveal>
+              <div className="absolute w-4 h-4 rounded-full bg-[#17130a] border-2 border-slate-600 left-[-40px] top-2"></div>
+              <div className="glass-panel p-6 rounded-2xl opacity-90 hover:opacity-100 transition-opacity">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
+                  <h3 className="text-xl font-bold text-[#ece1d1]">{portfolio.education[1].degree} — {portfolio.education[1].field}</h3>
+                  <span className="font-mono text-xs text-[#d3c5ac] mt-1 md:mt-0 px-3 py-1 rounded-full bg-white/5 border border-white/5">
+                    {portfolio.education[1].duration} • {portfolio.education[1].notes}
+                  </span>
+                </div>
+                <p className="text-sm text-[#d3c5ac]">{portfolio.education[1].school} | {portfolio.education[1].location}</p>
               </div>
+            </div>
+          </div>
+        </section>
 
-              <div className="mt-6 grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-                <div className="info-stack">
-                  <div className="info-card">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Email</p>
-                    <a className="mt-2 block text-sm text-white hover:text-amber-200" href={`mailto:${portfolio.contact.email}`}>
-                      {portfolio.contact.email}
-                    </a>
+        {/* Contact Section */}
+        <section 
+          className="mt-16 mb-16 reveal" 
+          id="contact"
+          data-reveal
+          data-story-section="contact"
+        >
+          <div className="glass-panel rounded-2xl p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-12 relative overflow-hidden border border-white/10">
+            {/* Background elements */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#17130a]/80 to-[#241f15]/80 pointer-events-none"></div>
+            
+            {/* Left Column: Connection detail */}
+            <div className="lg:col-span-6 relative z-10 flex flex-col justify-center">
+              <h2 className="text-4xl lg:text-5xl font-bold text-[#ece1d1] leading-tight mb-4">
+                Initialize <br/>Connection.
+              </h2>
+              <p className="text-base text-[#d3c5ac] mb-8 max-w-[420px] leading-relaxed">
+                Ready to architect the next intelligent application? Let's discuss your vision and technical requirements.
+              </p>
+              
+              <div className="space-y-4">
+                <a className="flex items-center gap-4 text-[#ece1d1] hover:text-[#fbbf24] transition-colors group w-fit" href={`mailto:${portfolio.contact.email}`}>
+                  <div className="w-12 h-12 rounded-full glass-panel flex items-center justify-center group-hover:border-[#fbbf24]/50 transition-colors">
+                    <span className="material-symbols-outlined text-[#fbbf24]">mail</span>
                   </div>
-                  <div className="info-card">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Phone</p>
-                    <p className="mt-2 text-sm text-slate-200">{portfolio.contact.phone}</p>
+                  <span className="text-sm font-medium">{portfolio.contact.email}</span>
+                </a>
+                
+                <a className="flex items-center gap-4 text-[#ece1d1] hover:text-[#5de6ff] transition-colors group w-fit" href={`https://${portfolio.contact.github}`} target="_blank" rel="noreferrer">
+                  <div className="w-12 h-12 rounded-full glass-panel flex items-center justify-center group-hover:border-[#5de6ff]/50 transition-colors">
+                    <span className="material-symbols-outlined text-[#5de6ff]">terminal</span>
                   </div>
-                  <div className="info-card">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">GitHub</p>
-                    <a
-                      className="mt-2 block text-sm text-white hover:text-amber-200"
-                      href={`https://${portfolio.contact.github}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {portfolio.contact.github}
-                    </a>
+                  <span className="text-sm font-medium">{portfolio.contact.github}</span>
+                </a>
+                
+                <a className="flex items-center gap-4 text-[#ece1d1] hover:text-[#fbbf24] transition-colors group w-fit" href={`https://www.${portfolio.contact.linkedin}`} target="_blank" rel="noreferrer">
+                  <div className="w-12 h-12 rounded-full glass-panel flex items-center justify-center group-hover:border-[#fbbf24]/50 transition-colors">
+                    <span className="material-symbols-outlined text-[#fbbf24]">work</span>
                   </div>
-                  <div className="info-card">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">LinkedIn</p>
-                    <a
-                      className="mt-2 block text-sm text-white hover:text-amber-200"
-                      href={`https://www.${portfolio.contact.linkedin}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {portfolio.contact.linkedin}
-                    </a>
-                  </div>
-                  <a
-                    className="secondary-button w-full justify-center"
-                    href={resumeUrl}
-                    download="Dhruv-Patel-Resume.pdf"
-                  >
-                    Download resume
-                  </a>
+                  <span className="text-sm font-medium">{portfolio.contact.linkedin}</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Right Column: Modern Glassmorphic Form */}
+            <div className="lg:col-span-6 relative z-10 bg-[#201b11]/30 p-6 rounded-2xl border border-white/5 shadow-2xl">
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#d3c5ac] uppercase tracking-widest mb-2">System ID (Name)</label>
+                  <input 
+                    className="w-full bg-[#17130a]/80 border-0 border-b border-white/10 text-[#ece1d1] px-4 py-3 font-mono text-sm input-glow transition-colors focus:ring-0 focus:outline-none" 
+                    placeholder="John Doe" 
+                    value={contact.name}
+                    onChange={(e) => setContact((c) => ({ ...c, name: e.target.value }))}
+                    type="text"
+                  />
+                  {contactErrors.name ? <span className="text-xs text-rose-300 mt-1 block">{contactErrors.name}</span> : null}
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-semibold text-[#d3c5ac] uppercase tracking-widest mb-2">Comms Link (Email)</label>
+                  <input 
+                    className="w-full bg-[#17130a]/80 border-0 border-b border-white/10 text-[#ece1d1] px-4 py-3 font-mono text-sm input-glow transition-colors focus:ring-0 focus:outline-none" 
+                    placeholder="john@company.com" 
+                    value={contact.email}
+                    onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))}
+                    type="email"
+                  />
+                  {contactErrors.email ? <span className="text-xs text-rose-300 mt-1 block">{contactErrors.email}</span> : null}
                 </div>
 
-                <form className="rounded-[1.75rem] border border-white/10 bg-slate-950/55 p-5 shadow-[0_20px_80px_-45px_rgba(0,0,0,0.9)]">
-                  <div className="grid gap-4">
-                    <label className="field">
-                      <span className="field-label">Name</span>
-                      <input
-                        value={contact.name}
-                        onChange={(e) => setContact((current) => ({ ...current, name: e.target.value }))}
-                        className="field-input"
-                        placeholder="Your name"
-                      />
-                      {contactErrors.name ? <span className="field-error">{contactErrors.name}</span> : null}
-                    </label>
+                <div>
+                  <label className="block text-xs font-semibold text-[#d3c5ac] uppercase tracking-widest mb-2">Subject Link</label>
+                  <input 
+                    className="w-full bg-[#17130a]/80 border-0 border-b border-white/10 text-[#ece1d1] px-4 py-3 font-mono text-sm input-glow transition-colors focus:ring-0 focus:outline-none" 
+                    placeholder="Collaboration, Hiring, Project..." 
+                    value={contact.subject}
+                    onChange={(e) => setContact((c) => ({ ...c, subject: e.target.value }))}
+                    type="text"
+                  />
+                  {contactErrors.subject ? <span className="text-xs text-rose-300 mt-1 block">{contactErrors.subject}</span> : null}
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-semibold text-[#d3c5ac] uppercase tracking-widest mb-2">Payload (Message)</label>
+                  <textarea 
+                    className="w-full bg-[#17130a]/80 border-0 border-b border-white/10 text-[#ece1d1] px-4 py-3 font-mono text-sm input-glow transition-colors focus:ring-0 focus:outline-none resize-none" 
+                    placeholder="Initiating request..." 
+                    rows={4}
+                    value={contact.message}
+                    onChange={(e) => setContact((c) => ({ ...c, message: e.target.value }))}
+                  ></textarea>
+                  {contactErrors.message ? <span className="text-xs text-rose-300 mt-1 block">{contactErrors.message}</span> : null}
+                </div>
+                
+                <button 
+                  className="w-full mt-4 bg-transparent border border-[#5de6ff] text-[#5de6ff] font-semibold text-xs uppercase tracking-widest px-6 py-3 rounded-lg hover:bg-[#5de6ff]/10 transition-colors flex justify-center items-center gap-2 hover:shadow-[0_0_15px_rgba(93,230,255,0.3)] active:scale-95 duration-150 disabled:opacity-60 disabled:cursor-not-allowed" 
+                  disabled={contactStatus.type === 'submitting'}
+                  onClick={async () => {
+                    const { z } = await import('zod')
 
-                    <label className="field">
-                      <span className="field-label">Email</span>
-                      <input
-                        value={contact.email}
-                        onChange={(e) => setContact((current) => ({ ...current, email: e.target.value }))}
-                        className="field-input"
-                        placeholder="you@example.com"
-                      />
-                      {contactErrors.email ? <span className="field-error">{contactErrors.email}</span> : null}
-                    </label>
+                    setContactStatus({ type: 'idle' })
+                    setContactErrors({})
 
-                    <label className="field">
-                      <span className="field-label">Subject</span>
-                      <input
-                        value={contact.subject}
-                        onChange={(e) => setContact((current) => ({ ...current, subject: e.target.value }))}
-                        className="field-input"
-                        placeholder="Hiring, project, collaboration..."
-                      />
-                      {contactErrors.subject ? <span className="field-error">{contactErrors.subject}</span> : null}
-                    </label>
+                    const schema = z.object({
+                      name: z.string().trim().min(2, 'Please enter your name').max(80),
+                      email: z.string().trim().email('Please enter a valid email').max(120),
+                      subject: z.string().trim().max(120).optional().default(''),
+                      message: z.string().trim().min(10, 'Please write a slightly longer message').max(2000),
+                    })
 
-                    <label className="field">
-                      <span className="field-label">Message</span>
-                      <textarea
-                        value={contact.message}
-                        onChange={(e) => setContact((current) => ({ ...current, message: e.target.value }))}
-                        className="field-input min-h-32 resize-none"
-                        placeholder="Tell me what you are building and what you need."
-                      />
-                      {contactErrors.message ? <span className="field-error">{contactErrors.message}</span> : null}
-                    </label>
+                    const parsed = schema.safeParse(contact)
+                    if (!parsed.success) {
+                      const fieldErrors = parsed.error.flatten().fieldErrors
+                      setContactErrors({
+                        name: fieldErrors.name?.[0],
+                        email: fieldErrors.email?.[0],
+                        subject: fieldErrors.subject?.[0],
+                        message: fieldErrors.message?.[0],
+                      })
+                      return
+                    }
 
-                    <button
-                      type="button"
-                      disabled={contactStatus.type === 'submitting'}
-                      onClick={async () => {
-                        const { z } = await import('zod')
+                    setContactStatus({ type: 'submitting' })
+                    const res = await postJson<{ message: string; id: string }>('/api/contact', parsed.data)
 
-                        setContactStatus({ type: 'idle' })
-                        setContactErrors({})
+                    if (!res.ok) {
+                      setContactStatus({
+                        type: 'error',
+                        message: res.error?.message || `Request failed (${res.status})`,
+                      })
+                      return
+                    }
 
-                        const schema = z.object({
-                          name: z.string().trim().min(2, 'Please enter your name').max(80),
-                          email: z.string().trim().email('Please enter a valid email').max(120),
-                          subject: z.string().trim().max(120).optional().default(''),
-                          message: z.string().trim().min(10, 'Please write a slightly longer message').max(2000),
-                        })
+                    setContactStatus({ type: 'success' })
+                    setContact({ name: '', email: '', subject: '', message: '' })
+                  }}
+                  type="button"
+                >
+                  {contactStatus.type === 'submitting' ? 'Transmitting...' : 'Transmit Data'}
+                  <span className="material-symbols-outlined text-sm">send</span>
+                </button>
 
-                        const parsed = schema.safeParse(contact)
-                        if (!parsed.success) {
-                          const fieldErrors = parsed.error.flatten().fieldErrors
-                          setContactErrors({
-                            name: fieldErrors.name?.[0],
-                            email: fieldErrors.email?.[0],
-                            subject: fieldErrors.subject?.[0],
-                            message: fieldErrors.message?.[0],
-                          })
-                          return
-                        }
-
-                        setContactStatus({ type: 'submitting' })
-                        const res = await postJson<{ message: string; id: string }>('/api/contact', parsed.data)
-
-                        if (!res.ok) {
-                          setContactStatus({
-                            type: 'error',
-                            message: res.error?.message || `Request failed (${res.status})`,
-                          })
-                          return
-                        }
-
-                        setContactStatus({ type: 'success' })
-                        setContact({ name: '', email: '', subject: '', message: '' })
-                      }}
-                      className="primary-button w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {contactStatus.type === 'submitting' ? 'Sending...' : 'Send message'}
-                    </button>
-
-                    {contactStatus.type === 'success' ? (
-                      <p className="text-xs text-emerald-300">Thanks, your message was sent successfully.</p>
-                    ) : null}
-                    {contactStatus.type === 'error' ? (
-                      <p className="text-xs text-rose-300">{contactStatus.message}</p>
-                    ) : null}
-                  </div>
-                </form>
-              </div>
+                {contactStatus.type === 'success' ? (
+                  <p className="text-xs text-emerald-300 mt-2">Thanks, your message was sent successfully.</p>
+                ) : null}
+                {contactStatus.type === 'error' ? (
+                  <p className="text-xs text-rose-300 mt-2">{contactStatus.message}</p>
+                ) : null}
+              </form>
             </div>
           </div>
         </section>
 
-        <footer className="mt-12 border-t border-white/8 pt-8 text-sm text-slate-400">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p>(c) {new Date().getFullYear()} {portfolio.name}</p>
-            <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-              Built with React, Express, and MongoDB
+        {/* Footer */}
+        <footer className="w-full py-8 mt-16 border-t border-white/5 bg-[#17130a]">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-xl font-semibold text-[#ffe1a7] tracking-tighter">DP</div>
+            
+            <p className="text-xs text-[#d3c5ac] text-center md:text-left">
+              © {new Date().getFullYear()} Dhruv Patel. Engineered with AI/ML Precision.
             </p>
+            
+            <ul className="flex gap-6">
+              <li><a className="text-xs text-[#d3c5ac] hover:text-[#5de6ff] transition-colors" href={`https://${portfolio.contact.github}`} target="_blank" rel="noreferrer">GitHub</a></li>
+              <li><a className="text-xs text-[#d3c5ac] hover:text-[#5de6ff] transition-colors" href={`https://www.${portfolio.contact.linkedin}`} target="_blank" rel="noreferrer">LinkedIn</a></li>
+              <li><a className="text-xs text-[#d3c5ac] hover:text-[#5de6ff] transition-colors" href={`mailto:${portfolio.contact.email}`}>Email</a></li>
+            </ul>
           </div>
         </footer>
       </main>
